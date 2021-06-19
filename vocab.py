@@ -23,4 +23,16 @@ def create_vocab(data):
     
     max_len_hin = np.max(hin_line_length)
 
-    return eng_vocab,max_len_eng,hin_vocab,max_len_hin
+    return sorted(list(eng_vocab)),max_len_eng,sorted(list(hin_vocab)),max_len_hin
+
+def create_tokens(enc_vocab,dec_vocab):
+   
+    num_encoder_tokens = len(enc_vocab)
+    num_decoder_tokens = len(dec_vocab)
+    num_decoder_tokens += 1 # For zero padding
+    input_token_index = dict([(word, i+1) for i, word in enumerate(enc_vocab)])
+    target_token_index = dict([(word, i+1) for i, word in enumerate(dec_vocab)])
+    reverse_input_char_index = dict((i, word) for word, i in input_token_index.items())
+    reverse_target_char_index = dict((i, word) for word, i in target_token_index.items())
+
+    return num_encoder_tokens,num_decoder_tokens,input_token_index,reverse_input_char_index,target_token_index,reverse_target_char_index
