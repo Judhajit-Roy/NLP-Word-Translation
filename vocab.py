@@ -3,27 +3,19 @@ import numpy as np
 
 def create_vocab(data):
     
-    eng_vocab = set()
-    eng_line_length = []
-    for line in data.English:
-        for word in line.split():
-            if word not in eng_vocab:
-                eng_vocab.add(word)
-        eng_line_length.append(len(line.split(' ')))
+    all_eng_words=set()
+    for eng in engmar_df_40k['English'] :
+        for word in eng.split():
+            if word not in all_eng_words:
+                all_eng_words.add(word)
+                
+    all_marathi_words=set()
+    for mar in engmar_df_40k['Marathi']:
+        for word in mar.split():
+            if word not in all_marathi_words:
+                all_marathi_words.add(word)
 
-    max_len_eng = np.max(eng_line_length)
-
-    hin_vocab = set()
-    hin_line_length = []
-    for line in data.Hindi:
-        for word in line.split():
-            if word not in hin_vocab:
-                hin_vocab.add(word)
-        hin_line_length.append(len(line.split(' ')))
-    
-    max_len_hin = np.max(hin_line_length)
-
-    return sorted(list(eng_vocab)),max_len_eng,sorted(list(hin_vocab)),max_len_hin
+    return sorted(all_eng_words),sorted(all_marathi_words))
 
 def create_tokens(enc_vocab,dec_vocab):
    
