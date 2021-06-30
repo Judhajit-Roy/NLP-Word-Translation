@@ -3,35 +3,30 @@ import re
 import string
 import data
 
-def textcleaner(eng_hin_data):
+def textcleaner(engmar_df):
+
+    engmar_df['eng_len'] = engmar_df['English'].apply(lambda x: len(x.split()))
+    engmar_df['mar_len'] = engmar_df['Marathi'].apply(lambda x: len(x.split()))
+
+    engmar_df_40k = engmar_df[(engmar_df['eng_len'] <= 20) & (engmar_df['eng_len'] > 2)]
+
+    # remove special characters english and marathi
+    exclude = set(string.punctuation)
+    exclude.add('।')
+    # enghin_df_30k['Hindi'] = enghin_df_30k['Hindi'].apply(lambda x:' '.join(re.sub("(%{[A-Za-z0-9]+)|(&[A-Za-z0-9]+)", " ", x).split()))
+    engmar_df_40k['Marathi'] = engmar_df_40k['Marathi'].apply(lambda x: ''.join([i for i in x if i not in exclude]))
+
+    # enghin_df_30k['English'] = enghin_df_30k['English'].apply(lambda x:' '.join(re.sub("(%{[A-Za-z0-9]+)|(&[A-Za-z0-9]+)", " ", x).split()))
+    engmar_df_40k['English'] = engmar_df_40k['English'].apply(lambda x: ''.join([i for i in x if i not in exclude]))
 
     # Lowercase all characters
-    eng_hin_data.English=eng_hin_data.English.apply(lambda x: x.lower())
+    engmar_df_40k['English'] = engmar_df_40k['English'].apply(lambda x: x.lower())
+    engmar_df_40k['Marathi'] = engmar_df_40k['Marathi'].apply(lambda x: x.lower())
 
-    # Remove quotes
-    eng_hin_data.English=eng_hin_data.English.apply(lambda x: re.sub("'", '', x))
-    eng_hin_data.Hindi=eng_hin_data.Hindi.apply(lambda x: re.sub("'", '', x))
-    exclude = set(string.punctuation) # Set of all special characters
-
-    # Remove all the special characters
-    eng_hin_data.English=eng_hin_data.English.apply(lambda x: ''.join(ch for ch in x if ch not in exclude))
-    eng_hin_data.Hindi=eng_hin_data.Hindi.apply(lambda x: ''.join(ch for ch in x if ch not in exclude))
-
-    # Remove all numbers from text
-    digits = '1234567890'
-    remove_digits = str.maketrans('', '', digits)
-    eng_hin_data.English=eng_hin_data.English.apply(lambda x: x.translate(remove_digits))
-    eng_hin_data.Hindi = eng_hin_data.Hindi.apply(lambda x: re.sub("[२३०८१५७९४६]", "", x))
-
-    # Remove extra spaces
-    eng_hin_data.English=eng_hin_data.English.apply(lambda x: x.strip())
-    eng_hin_data.Hindi=eng_hin_data.Hindi.apply(lambda x: x.strip())
-    eng_hin_data.English=eng_hin_data.English.apply(lambda x: re.sub(" +", " ", x))
-    eng_hin_data.Hindi=eng_hin_data.Hindi.apply(lambda x: re.sub(" +", " ", x))
 
     # Add start and end tokens to target sequences
-    eng_hin_data.Hindi = eng_hin_data.Hindi.apply(lambda x : 'START_ '+ x + ' _END')
+    engmar_df_40k['Marathi'] = engmar_df_40k['Marathi'].apply(lambda x : '<START> '+ x + ' <END>')
 
-    return eng_hin_data
+    return engmar_df_40k
 
 
