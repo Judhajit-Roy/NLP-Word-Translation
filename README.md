@@ -1,3 +1,3 @@
-# English to Hindi Language Translation with NLP
+# English to Marathi Language Translation with NLP
 
-English to Hindi Language Translation using a Seq2Seq model of Encoder-Decoder Architecture
+English to Marathi Language Translation using a Seq2Seq model of Encoder-Decoder Architecture
